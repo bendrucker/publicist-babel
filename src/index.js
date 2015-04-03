@@ -9,6 +9,7 @@ import {resolve, join, relative, dirname} from 'path';
 import merge from 'deepmerge';
 import outputFile from 'output-file';
 import strip from 'strip-path';
+import {normalize as normalizeDot} from 'dot-slash';
 
 const writeFile = Promise.promisify(outputFile);
 Promise.promisifyAll(fs);
@@ -34,25 +35,26 @@ export default function babelify (pack, config = {}) {
       });
   })
   .then(() => {
-    const originalMain = pack.get('main');
-    const basePathRelative = relative(dirname(pack.path), basePath);
-    const destRelative = relative(dirname(pack.path), config.dest);
-    const prefix = './';
-    let compiledMain = originalMain.startsWith(prefix) ? prefix : '';
-    compiledMain += join(destRelative, strip(originalMain, basePathRelative));
-    pack.set('main', compiledMain);
-    const transforms = pack.get('browserify.transform');
-    if (transforms && transforms.length) spliceBabelify(transforms);
+    updateMain(pack, basePath, config.dest);
+    spliceBabelify(pack.get('browserify.transform'));
     return pack.write();
   });
 }
 
+function updateMain (pack, src, dest) {
+  const original = pack.get('main');
+  const srcRelative = relative(dirname(pack.path), src);
+  const destRelative = relative(dirname(pack.path), dest);
+  const outputMainPath = join(destRelative, strip(original, srcRelative));
+  pack.set('main', normalizeDot(outputMainPath, original));
+}
+
 function spliceBabelify (transforms) {
+  if (!(transforms && transforms.length)) return;
   const b = 'babelify';
   const index = transforms.findIndex((transform) => {
     if (transform === b) return true;
     if (Array.isArray(transform) && transform.includes(b)) return true;
   });
   if (index > -1) transforms.splice(index, 1);
-  return transforms;
 }

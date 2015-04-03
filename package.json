@@ -7,6 +7,7 @@
     "babel": "~5.0.6",
     "bluebird": "~2.9.13",
     "deepmerge": "~0.2.7",
+    "dot-slash": "~1.0.0",
     "glob": "~4.4.1",
     "glob2base": "0.0.12",
     "output-file": "~1.1.1",
