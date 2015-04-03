@@ -7,7 +7,11 @@
     "babel": "~4.6.1",
     "babel-core": "~4.6.1",
     "bluebird": "~2.9.13",
-    "glob": "~4.4.1"
+    "deepmerge": "~0.2.7",
+    "glob": "~4.4.1",
+    "glob2base": "0.0.12",
+    "output-file": "~1.1.1",
+    "strip-path": "~1.0.0"
   },
   "devDependencies": {},
   "scripts": {
