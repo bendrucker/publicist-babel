@@ -1,2 +1,2 @@
-# publicist-babel
-Babel build task for publicist
+# publicist-es5
+ESNext to ES5 build task for publicist

@@ -1,7 +1,7 @@
 {
-  "name": "publicist-babel",
+  "name": "publicist-es5",
   "version": "0.0.1",
-  "description": "Babel build task for publicist",
+  "description": "ESNext to ES5 build task for publicist",
   "main": "./src",
   "dependencies": {
     "babel": "~4.6.1",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bendrucker/publicist-babel.git"
+    "url": "https://github.com/bendrucker/publicist-es5.git"
   },
   "keywords": [
     "publicist",
@@ -30,7 +30,7 @@
   "author": "Ben Drucker <bvdrucker@gmail.com> (http://www.bendrucker.me/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bendrucker/publicist-babel/issues"
+    "url": "https://github.com/bendrucker/publicist-es5/issues"
   },
-  "homepage": "https://github.com/bendrucker/publicist-babel"
+  "homepage": "https://github.com/bendrucker/publicist-es5"
 }
