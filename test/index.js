@@ -1,12 +1,11 @@
 'use strict';
 
 import assert from 'assert';
-import es5 from '../';
+import * as es5 from '../';
 import {Package as Pack} from 'packhorse';
 import {sync as rmSync} from 'rimraf';
 import {mkdirSync, readFileSync} from 'fs';
 import {resolve} from 'path';
-import {runInNewContext as run} from 'vm';
 import {ncp as cp} from 'ncp';
 
 describe('publicist-es5', function () {
@@ -23,102 +22,113 @@ describe('publicist-es5', function () {
     rmSync(working);
   });
 
-  function getPackage (testCase) {
-    const pkgPath = resolve(working, `${testCase}/package.json`);
-    return JSON.parse(readFileSync(pkgPath));
+  function build (testCase) {
+    return new Pack(resolve(working, `${testCase}/package.json`))
+      .read()
+      .then((pack) => {
+        return es5.build(pack, es5.defaults({
+          dest: resolve(working, `${testCase}/output`),
+          src: resolve(working, `${testCase}/src/*.js`)
+        }));
+      });
   }
 
-  it('transpiles es6 to es5 with babel', () => {
-    return new Pack(resolve(working, 'normal/package.json'))
-      .read()
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'normal/output'),
-          src: resolve(working, 'normal/src/*.js')
-        });
-      })
-      .then(() => {
+  describe('main', () => {
+
+    it('transpiles es6 to es5 with babel', () => {
+      return build('normal').then(() => {
         assert.equal(require('./working/normal/output'), 'foo');
       });    
+    });
+
   });
 
-  it('updates the package.json "main"', () => {
-    return new Pack(resolve(working, 'normal/package.json'))
-      .read()
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'normal/output'),
-          src: resolve(working, 'normal/src/*.js')
-        });
-      })
-      .then(() => {
-        assert.equal(getPackage('normal').main, './output');
-      });
-  });
+  describe('after', () => {
 
-  it('updates the package.json "main" with non-index', () => {
-    return new Pack(resolve(working, 'main-non-index/package.json'))
-      .read()
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'main-non-index/output'),
-          src: resolve(working, 'main-non-index/src/*.js')
-        });
-      })
-      .then(() => {
-        assert.equal(require('./working/main-non-index/package.json').main, './output/code.js');
-      });
-  });
+    function getPackage (testCase) {
+      const pkgPath = resolve(working, `${testCase}/package.json`);
+      return JSON.parse(readFileSync(pkgPath));
+    }
 
-  it('obeys the "main" use of leading "./"', () => {
-    return new Pack(resolve(working, 'normal/package.json'))
-      .read()
-      .then((pack) => {
-        return pack.set('main', 'src').write();
-      })
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'normal/output'),
-          src: resolve(working, 'normal/src/*.js')
+    it('updates the package.json "main"', () => {
+      return new Pack(resolve(working, 'normal/package.json'))
+        .read()
+        .then((pack) => {
+          return es5.after(pack, es5.defaults({
+            dest: resolve(working, 'normal/output'),
+            src: resolve(working, 'normal/src/*.js')
+          }));
+        })
+        .then(() => {
+          assert.equal(getPackage('normal').main, './output');
         });
-      })
-      .then(() => {
-        assert.equal(getPackage('normal').main, 'output');
-      });
-  });
+    });
 
-  it('removes the babelify transform', () => {
-    return new Pack(resolve(working, 'normal/package.json'))
-      .read()
-      .then((pack) => {
-        return pack.set('browserify.transform', ['babelify']).write();
-      })
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'normal/output'),
-          src: resolve(working, 'normal/src/*.js')
+    it('updates the package.json "main" with non-index', () => {
+      return new Pack(resolve(working, 'main-non-index/package.json'))
+        .read()
+        .then((pack) => {
+          return es5.after(pack, es5.defaults({
+            dest: resolve(working, 'main-non-index/output'),
+            src: resolve(working, 'main-non-index/src/*.js')
+          }));
+        })
+        .then(() => {
+          assert.equal(getPackage('main-non-index').main, './output/code.js');
         });
-      })
-      .then(() => {
-        assert.equal(getPackage('normal').browserify.transform.length, 0);
-      });
-  });
+    });
 
-  it('removes the babelify transform with options', () => {
-    return new Pack(resolve(working, 'normal/package.json'))
-      .read()
-      .then((pack) => {
-        return pack.set('browserify.transform', [['babelify', {}]]).write();
-      })
-      .then((pack) => {
-        return es5(pack, {
-          dest: resolve(working, 'normal/output'),
-          src: resolve(working, 'normal/src/*.js')
+    it('obeys the "main" use of leading "./"', () => {
+      return new Pack(resolve(working, 'normal/package.json'))
+        .read()
+        .then((pack) => {
+          return pack.set('main', 'src').write();
+        })
+        .then((pack) => {
+          return es5.after(pack, es5.defaults({
+            dest: resolve(working, 'normal/output'),
+            src: resolve(working, 'normal/src/*.js')
+          }));
+        })
+        .then(() => {
+          assert.equal(getPackage('normal').main, 'output');
         });
-      })
-      .then(() => {
-        assert.equal(getPackage('normal').browserify.transform.length, 0);
-      });
-  });
+    });
+
+    it('removes the babelify transform', () => {
+      return new Pack(resolve(working, 'normal/package.json'))
+        .read()
+        .then((pack) => {
+          return pack.set('browserify.transform', ['babelify']).write();
+        })
+        .then((pack) => {
+          return es5.after(pack, es5.defaults({
+            dest: resolve(working, 'normal/output'),
+            src: resolve(working, 'normal/src/*.js')
+          }));
+        })
+        .then(() => {
+          assert.equal(getPackage('normal').browserify.transform.length, 0);
+        });
+    });
+
+    it('removes the babelify transform with options', () => {
+      return new Pack(resolve(working, 'normal/package.json'))
+        .read()
+        .then((pack) => {
+          return pack.set('browserify.transform', [['babelify', {}]]).write();
+        })
+        .then((pack) => {
+          return es5.after(pack, es5.defaults({
+            dest: resolve(working, 'normal/output'),
+            src: resolve(working, 'normal/src/*.js')
+          }));
+        })
+        .then(() => {
+          assert.equal(getPackage('normal').browserify.transform.length, 0);
+        });
+    });
+
+  });  
 
 });
