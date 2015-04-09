@@ -17,7 +17,7 @@ const writeFile = Promise.promisify(outputFile);
 Promise.promisifyAll(fs);
 Promise.promisifyAll(babel);
 
-export function defaults (config) {
+export function defaults (pack, config) {
   config = merge({
     src: './src/**/*.js'
   }, config);

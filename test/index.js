@@ -26,7 +26,7 @@ describe('publicist-es5', function () {
     return new Pack(resolve(working, `${testCase}/package.json`))
       .read()
       .then((pack) => {
-        return es5.build(pack, es5.defaults({
+        return es5.build(pack, es5.defaults(pack, {
           dest: resolve(working, `${testCase}/output`),
           src: resolve(working, `${testCase}/src/*.js`)
         }));
@@ -54,7 +54,7 @@ describe('publicist-es5', function () {
       return new Pack(resolve(working, 'normal/package.json'))
         .read()
         .then((pack) => {
-          return es5.after(pack, es5.defaults({
+          return es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
@@ -68,7 +68,7 @@ describe('publicist-es5', function () {
       return new Pack(resolve(working, 'main-non-index/package.json'))
         .read()
         .then((pack) => {
-          return es5.after(pack, es5.defaults({
+          return es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'main-non-index/output'),
             src: resolve(working, 'main-non-index/src/*.js')
           }));
@@ -85,7 +85,7 @@ describe('publicist-es5', function () {
           return pack.set('main', 'src').write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults({
+          return es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
@@ -102,7 +102,7 @@ describe('publicist-es5', function () {
           return pack.set('browserify.transform', ['babelify']).write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults({
+          return es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
@@ -119,7 +119,7 @@ describe('publicist-es5', function () {
           return pack.set('browserify.transform', [['babelify', {}]]).write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults({
+          return es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
