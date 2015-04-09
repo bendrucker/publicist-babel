@@ -43,7 +43,6 @@ export function build (pack, config) {
 export function after (pack, config) {
   updateMain(pack, config);
   spliceBabelify(pack, config);
-  return pack.write();
 }
 
 function updateMain (pack, config) {

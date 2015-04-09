@@ -45,22 +45,15 @@ describe('publicist-es5', function () {
 
   describe('after', () => {
 
-    function getPackage (testCase) {
-      const pkgPath = resolve(working, `${testCase}/package.json`);
-      return JSON.parse(readFileSync(pkgPath));
-    }
-
     it('updates the package.json "main"', () => {
       return new Pack(resolve(working, 'normal/package.json'))
         .read()
         .then((pack) => {
-          return es5.after(pack, es5.defaults(pack, {
+          es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
-        })
-        .then(() => {
-          assert.equal(getPackage('normal').main, './output');
+          assert.equal(pack.get('main'), './output');
         });
     });
 
@@ -68,13 +61,11 @@ describe('publicist-es5', function () {
       return new Pack(resolve(working, 'main-non-index/package.json'))
         .read()
         .then((pack) => {
-          return es5.after(pack, es5.defaults(pack, {
+          es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'main-non-index/output'),
             src: resolve(working, 'main-non-index/src/*.js')
           }));
-        })
-        .then(() => {
-          assert.equal(getPackage('main-non-index').main, './output/code.js');
+          assert.equal(pack.get('main'), './output/code.js');
         });
     });
 
@@ -85,13 +76,11 @@ describe('publicist-es5', function () {
           return pack.set('main', 'src').write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults(pack, {
+          es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
-        })
-        .then(() => {
-          assert.equal(getPackage('normal').main, 'output');
+          assert.equal(pack.get('main'), 'output');
         });
     });
 
@@ -102,13 +91,11 @@ describe('publicist-es5', function () {
           return pack.set('browserify.transform', ['babelify']).write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults(pack, {
+          es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
-        })
-        .then(() => {
-          assert.equal(getPackage('normal').browserify.transform.length, 0);
+          assert.equal(pack.get('browserify.transform.length'), 0);
         });
     });
 
@@ -119,13 +106,11 @@ describe('publicist-es5', function () {
           return pack.set('browserify.transform', [['babelify', {}]]).write();
         })
         .then((pack) => {
-          return es5.after(pack, es5.defaults(pack, {
+          es5.after(pack, es5.defaults(pack, {
             dest: resolve(working, 'normal/output'),
             src: resolve(working, 'normal/src/*.js')
           }));
-        })
-        .then(() => {
-          assert.equal(getPackage('normal').browserify.transform.length, 0);
+          assert.equal(pack.get('browserify.transform.length'), 0);
         });
     });
 
