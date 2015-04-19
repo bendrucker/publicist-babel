@@ -18,10 +18,11 @@
     "mocha": "~2.2.1",
     "ncp": "~2.0.0",
     "packhorse": "~1.2.0",
-    "rimraf": "~2.3.2"
+    "rimraf": "~2.3.2",
+    "standard": "bendrucker/standard#babel"
   },
   "scripts": {
-    "test": "mocha --compilers js:babel/register test/*.js"
+    "test": "standard && mocha --compilers js:babel/register test/*.js"
   },
   "repository": {
     "type": "git",
