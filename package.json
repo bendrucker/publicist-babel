@@ -22,7 +22,8 @@
     "standard": "bendrucker/standard#babel"
   },
   "scripts": {
-    "test": "standard && mocha --compilers js:babel/register test/*.js"
+    "test": "standard && mocha --compilers js:babel/register test/*.js",
+    "build": "babel ./src -d ./lib"
   },
   "repository": {
     "type": "git",
