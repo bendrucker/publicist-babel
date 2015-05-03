@@ -3,7 +3,7 @@
 import Promise from 'bluebird'
 import * as babel from 'babel'
 import globC from 'glob'
-import globBase from 'glob2Base'
+import globBase from 'glob2base'
 import {Minimatch} from 'minimatch'
 import fs from 'fs'
 import {resolve, join, relative, dirname} from 'path'
