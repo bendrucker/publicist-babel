@@ -1,4 +1,4 @@
-# publicist-es5 [![Build Status](https://travis-ci.org/bendrucker/publicist-es5.svg?branch=master)](https://travis-ci.org/bendrucker/publicist-es5)
+# publicist-es5 [![Build Status](https://travis-ci.org/bendrucker/publicist-es5.svg?branch=master)](https://travis-ci.org/bendrucker/publicist-es5) [![Greenkeeper badge](https://badges.greenkeeper.io/bendrucker/publicist-es5.svg)](https://greenkeeper.io/)
 
 ESNext -> ES5 build task for [publicist](https://github.com/bendrucker/publicist).
 
