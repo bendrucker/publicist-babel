@@ -12,7 +12,7 @@
     "dot-slash": "~1.0.0",
     "glob": "~4.4.1",
     "glob2base": "0.0.12",
-    "minimatch": "~2.0.4",
+    "minimatch": "~3.0.4",
     "output-file": "~1.1.1",
     "strip-path": "~1.0.0"
   },
